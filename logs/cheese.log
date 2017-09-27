@@ -1,0 +1,24 @@
+[2017-09-11 15:23:24.187] [ERROR] cheese - Cheese is too ripe!
+[2017-09-11 15:23:24.190] [FATAL] cheese - Cheese was breeding ground for listeria.
+[2017-09-11 15:24:24.198] [ERROR] cheese - TypeError: Cannot read property 'user' of undefined
+    at auth.authUser (/Users/leon/WorkSpace/node/iME/middlewares/auth.js:5:31)
+    at Layer.handle [as handle_request] (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/layer.js:95:5)
+    at trim_prefix (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:312:13)
+    at /Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:280:7
+    at Function.process_params (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:330:12)
+    at next (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:271:10)
+    at session (/Users/leon/WorkSpace/node/iME/node_modules/.1.15.5@express-session/index.js:189:7)
+    at Layer.handle [as handle_request] (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/layer.js:95:5)
+    at trim_prefix (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:312:13)
+    at /Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:280:7
+[2017-09-11 15:24:26.890] [ERROR] cheese - TypeError: Cannot read property 'user' of undefined
+    at auth.authUser (/Users/leon/WorkSpace/node/iME/middlewares/auth.js:5:31)
+    at Layer.handle [as handle_request] (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/layer.js:95:5)
+    at trim_prefix (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:312:13)
+    at /Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:280:7
+    at Function.process_params (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:330:12)
+    at next (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:271:10)
+    at session (/Users/leon/WorkSpace/node/iME/node_modules/.1.15.5@express-session/index.js:189:7)
+    at Layer.handle [as handle_request] (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/layer.js:95:5)
+    at trim_prefix (/Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:312:13)
+    at /Users/leon/WorkSpace/node/iME/node_modules/.4.14.0@express/lib/router/index.js:280:7
