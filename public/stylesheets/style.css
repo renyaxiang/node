@@ -1,3 +1,23 @@
 .close{
     font-size: 20px;
 }
+.post-list{
+    padding-left: 0;
+}
+.post-list li{
+    display: flex;
+}
+.post-list li + li{
+    margin-top: 20px;
+}
+.post-list li img{
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+}
+.post-list li section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

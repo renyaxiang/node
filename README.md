@@ -6,7 +6,7 @@
 2. 技术选型
 3. 参考资料
 
-### 环境安装
+### 第 1 章 环境和工具安装
 
 - [Node](http://nodejs.cn)
 - [MySQL](https://www.mysql.com)
@@ -16,7 +16,6 @@
 - [Navicat for MySQL](http://pan.baidu.com/s/1gfgoIUB)
 - [Redis-Desktop-Manager](http://pan.baidu.com/s/1jHFeS9C)
 - [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=zh-CN)
-- [Source Code Pro](https://github.com/adobe-fonts/source-code-pro)
 
 ### 技术选型 
 
@@ -49,31 +48,58 @@
     - [supervisor](https://github.com/petruisfan/node-supervisor)
     - [pm2](https://github.com/Unitech/PM2)
 
-### 快速启动项目
+## Api权限认证
 
-1、安装package.json里的项目依赖文件
-``` bash
-cnpm install
-```
-2、启动redis服务
-```
-redis-server
-```
-2、启动mysql服务
+- 认证库：jwt
 
-打开系统偏好设置中MySQL，启动服务
 
-3、启动应用
-``` bash
-node app
-```
-4、产线部署
-``` bash
-pm2 start app.js
-```
+## 单元测试
 
-### 参考资料
+- 测试框架：mocha
+- 断言库：chai
 
-#### 书籍
+参考资料：
+
+-[测试框架 Mocha 实例教程](http://www.ruanyifeng.com/blog/2015/12/a-mocha-tutorial-of-examples.html)
+
+
+## 书籍
 
 - 《深入浅出Node.js》朴灵
+
+## 已实现功能
+
+- 授权认证
+- 单元测试
+- 邮件通知异常
+
+开发Api需要用到的库
+
+产线需要的库
+body-parser
+cookie-parser
+ejs-mate
+eventproxy
+jsonwebtoken
+mysql
+superagent
+uuid
+
+开发用到的库
+mocha
+chai
+mochawesome
+nodemailer
+mockjs
+
+会话管理
+接口认证
+
+GitHub授权
+
+日志管理
+邮件通知
+单元测试
+
+性能测试
+Redis缓存

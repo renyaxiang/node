@@ -1,0 +1,22 @@
+<div class="container">
+    <h3><%= post.title %></h3>
+    <div>
+        <span><%= post.username %></span> ·
+        <time><%= fromNow(post.updateDate) %></time>
+    </div>
+    <hr>
+    <p><%= post.content %></p>
+    <div class="clearfix">
+        <div class="pull-right">
+            <i class="fa fa-heart-o"></i>
+        </div>
+    </div>
+    <h5>用户评论</h5>
+    <hr>
+    <form>
+        <textarea class="form-control" rows="3" placeholder="请输入您的评论"></textarea>
+        <div class="clearfix">
+            <button class="btn btn-primary pull-right">评论</button>
+        </div>
+    </form>
+</div>

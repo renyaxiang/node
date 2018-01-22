@@ -1,0 +1,94 @@
+<div class="container">
+    <% if(pages == 0){ %>
+        <p class="text-muted">暂无相关文章</p>    
+    <% } %>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>标题</th>
+                <th>作者</th>
+                <th>日期</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% posts.forEach(function(post, index){ %>
+            <tr>
+                <td><%= index + 1 + (currentPage - 1) * perPage  %></td>
+                <td>
+                    <a href="/posts/<%= post.pid %>"><%= post.title %></a>
+                </td>
+                <td><%= post.username %></td>
+                <td><%= dateFormat(post.updateDate) %></td>
+                <td>
+                    <button class="btn btn-primary btn-sm">禁用</button>
+                    <button class="btn btn-danger btn-sm">删除</button>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+    </ul>
+    
+    <% 
+        var baseUrl = key 
+                        ? '/posts?key=' + key + '&page='
+                        : '/posts?page=';
+    %>
+
+    <% if(pages != 0){ %>
+    <div class="clearfix">
+        <ul class="pagination pull-right">
+            <% if(currentPage == 1 ) {%>
+                <li class="disabled">
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            <% }else{ %>
+                <li>
+                    <a href="<%= baseUrl %>1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            <% } %>
+    
+            <%
+                var pageStart = currentPage -2 > 0  ? currentPage -2 : 1;
+                var pageEnd = pageStart + 4 > pages ? pages : pageStart + 4;
+            %>
+    
+            <% if(pageStart > 1) {%>
+                <li><a>...</a></li>
+            <% } %>
+    
+            <% for(var i = pageStart; i <= pageEnd; i++){ %>
+                <% if(i == currentPage){ %>
+                    <li class="disabled"><a href="#"><%= i %></a></li> 
+                <% }else{ %>
+                    <li><a href="<%= baseUrl %><%= i %>"><%= i %></a></li> 
+                <% } %>  
+            <% } %>
+    
+            <% if(pageEnd < pages) {%>
+                <li><a>...</a></li>
+            <% } %>
+    
+            <% if(currentPage == pages ) {%>
+                <li class="disabled">
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            <% }else{ %>
+                <li>
+                    <a href="<%= baseUrl %><%= pages%>" aria-label="Previous">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+    <% } %>
+</div>

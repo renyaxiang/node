@@ -1,74 +1,80 @@
-var connection = require('../common/db');
-var EventProxy = require('eventproxy');
-var PostService = require('../services/post');
-var config = require('../config');
+/**
+ * @author xiangry <xiangrenya.gmail.com>
+ */
+const EventProxy = require('eventproxy')
+const PostService = require('../services/post')
+const config = require('../config')
+const utils = require('../common/utils')
 
+exports.showPostForm = function (req, res) {
+    res.render('post_form', {
+        title: '新增文章'
+    })
+}
 
 // 查询列表：分页、模糊查询
 exports.getPosts = function (req, res, next) {
-    var ep = new EventProxy();
-    var key = req.query.key || '';    
-    var page = req.query.page || 1;
-    var per_page = req.query.per_page || 20;
-    PostService.getPosts(key, page, per_page, function(err, posts){
-        if(err){
-            next(err);
-            return;
-        }
-        ep.emit('posts', posts);
-    });
-    PostService.countPosts(key, function(err, count){
-        if(err){
-            next(err);
-            return;
-        }
-        ep.emit('count', count);
+    const ep = new EventProxy()
+    const userId = null
+    const key = req.query.key || ''
+    let page = 1
+    let perPage = 20
+    if (req.query.page) {
+        page = Number(req.query.page)
+    }
+    if (req.query.perPage) {
+        perPage = Number(req.query.perPage)
+    }
+
+    PostService.getPostList(userId, key, page, perPage).then(datas => {
+        ep.emit('posts', datas)
+    }).catch(err => {
+        next(err)
     })
+
+    PostService.countPosts(userId, key).then(data => {
+        ep.emit('count', data)
+    }).catch(err => {
+        next(err)
+    })
+    
     ep.all('posts', 'count',  function(posts, count){
         res.render('post', {
             title: '文章列表',
             posts: posts,
-            current_page: page,
+            currentPage: page,
             pages: Math.ceil(count/10),
             key: key
-        });
-    });
-};
+        })
+    })
+}
+
+// 查看文章详情
 exports.getPostDetail = function (req, res, next) {
-    var id = req.params.id;
-    PostService.getPostDetail(id, function(err, post){
-        if(err){
-            next(err);
-            return;
-        }
-        res.render('post-detail', {
-            title: post.post_title,
-            post: post
-        });
-    });
-};
-exports.updatePost = function (req, res, next) {
-    var post_title = req.body.post_title;
-    var id = req.body.id;
-    PostService.updatePost(id, post_title, function(err, result){
-        if(err){
-            next(err);
-            return;
-        }
-        res.send({
-            isSuccessed: true
-        });
-    });
-};
-exports.delPost = function (req, res, next) {
-    var id = req.params.id;
-    PostService.delPost(id, function(err, result){
-        if(err){
-            next(err);
-            return;
-        }
-        res.send({
-            isSuccessed: true
-        });
-    });
+    const pid = req.params.id
+
+    PostService.getPostDetail(pid).then(data => {
+        res.render('post_detail', {
+            title: data.title,
+            post: data
+        })
+    }).catch(err => {
+        next(err)
+    })
+}
+
+// 新增文章
+exports.addPost = function (req, res, next) {
+    const userId = req.session.currentUser.userId
+    const body = utils.normalizeObj(req.body)
+    const title = body.title
+    const content = body.content
+
+    if(title && content){
+        PostService.addPost(userId, null, title, content).then((data)=>{
+            res.redirect('/posts/' + data)
+        }).catch(err => {
+            next(err)
+        })
+    }
 }

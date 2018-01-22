@@ -1,4 +1,6 @@
-var connection = require('../common/db');
+/**
+ * @author xiangry <xiangrenya@gmail.com>
+ */
 
 exports.index = function(req, res){
     res.render('setting', {
