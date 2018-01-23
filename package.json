@@ -4,9 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "before_dev": "redis-server",
-    "init_data": "node ./bin/user",
-    "dev": "supervisor app"
+    "before_start": "npm i && node ./bin/init_table",
+    "start": "supervisor app"
   },
   "author": "xiangrenya",
   "license": "MIT",
