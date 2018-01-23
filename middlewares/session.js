@@ -9,7 +9,7 @@
 
 const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session)
-const RedisStore = require('connect-redis')(session)
+// const RedisStore = require('connect-redis')(session)
 const config = require('../config')
 
 // mysql store
@@ -22,13 +22,13 @@ const mysqlStore = new MySQLStore({
 })
 
 // redis store
-const redisStore = new RedisStore({
-  port: config.redis_port,
-  host: config.redis_host,
-  db: config.redis_db,
-  pass: config.redis_password,
-  logErrors: true
-})
+// const redisStore = new RedisStore({
+//   port: config.redis_port,
+//   host: config.redis_host,
+//   db: config.redis_db,
+//   pass: config.redis_password,
+//   logErrors: true
+// })
 
 function setSession(store) {
   return session({
@@ -42,5 +42,5 @@ function setSession(store) {
 }
 
 exports.mysqlSession = setSession(mysqlStore)
-exports.redisSession = setSession(redisStore)
+// exports.redisSession = setSession(redisStore)
 
