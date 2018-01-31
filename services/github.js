@@ -18,23 +18,22 @@ const conn = require('../common/mysql')
  */
 exports.auth = function (code) {
   return new Promise((resolve, reject) => {
-    getAccessToken(code).then(accessToken => {
-      getUserData(accessToken).then(user => {
-        resolve({
+    fetchToken(code).then(accessToken => {
+      return getUserInfo(accessToken)
+    }).then(user => {
+        const userInfo = {
           id: user.id,
           userName: user.login,
-          accessToken: accessToken,
+          accessToken: user.accessToken,
           email: user.email,
           avatarUrl: user.avatar_url,
           intro: user.bio
-        })
-      }).catch((err) => {
-        reject(err)
+        }
+        resolve(userInfo)
       })
-    }).catch((err) => {
+    }).catch(err => {
       reject(err)
     })
-  })
 }
 
 /**
@@ -48,13 +47,10 @@ exports.registerByGithub = function (githubId, githubUserName, githubAccessToken
   const sql = 'insert into users(pid, githubId, githubUserName, userName, nickName, githubAccessToken, avatarUrl, email, intro) values(?, ?, ?, ?, ?, ?, ?, ?, ?)'
   const sqlParams = [uuidv4(), githubId, githubUserName, githubUserName, githubUserName, githubAccessToken, githubAvatarUrl, githubEmail, githubIntro]
   return new Promise((resolve, reject) => {
-      conn.query(sql, sqlParams, (err, datas) => {
-          if (err) {
-              reject(err)
-          } else {
-              resolve(datas)
-          }
-      })
+    conn.query(sql, sqlParams, (err, datas) => {
+      if(err) return reject(err)
+      resolve(datas)
+    })
   })
 }
 
@@ -69,13 +65,10 @@ exports.syncGithub = function (githubId, githubUserName, githubAccessToken) {
   const sql = 'update users set githubUserName = ?, githubAccessToken = ? where githubId = ?'
   const sqlParams = [githubUserName, githubAccessToken, githubId]
   return new Promise((resolve, reject) => {
-      conn.query(sql, sqlParams, (err, datas) => {
-          if (err) {
-              reject(err)
-          } else {
-              resolve(datas)
-          }
-      })
+    conn.query(sql, sqlParams, (err, datas) => {
+      if(err) return reject(err)
+      resolve(datas)
+    })
   })
 }
 
@@ -88,13 +81,10 @@ exports.getUserDetailByGithubId = function (githubId) {
   const sql = 'select  pid, nickname, status from users where githubId = ?'
   const sqlParams = [githubId]
   return new Promise((resolve, reject) => {
-      conn.query(sql, sqlParams, (err, datas) => {
-          if (err) {
-              reject(err)
-          } else {
-              resolve(datas[0])
-          }
-      });
+    conn.query(sql, sqlParams, (err, datas) => {
+      if(err) return reject(err)
+      resolve(datas[0])
+    })
   })
 }
 
@@ -104,21 +94,17 @@ exports.getUserDetailByGithubId = function (githubId) {
  * @param {String} code 地址栏返回的授权码
  * @returns {Promise}
  */
-function getAccessToken(code) {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: 'get',
-      url: 'https://github.com/login/oauth/access_token',
-      params: {
-        client_id: config.github_client_id,
-        client_secret: config.github_client_secret,
-        code: code
-      }
-    }).then((result) => {
-      resolve(qs.parse(result.data).access_token)
-    }).catch((err) => {
-      reject(err)
-    })
+function fetchToken(code) {
+  return axios({
+    method: 'get',
+    url: 'https://github.com/login/oauth/access_token',
+    params: {
+      client_id: config.github_client_id,
+      client_secret: config.github_client_secret,
+      code: code
+    }
+  }).then(result => {
+    return qs.parse(result.data).access_token
   })
 }
 
@@ -128,18 +114,15 @@ function getAccessToken(code) {
  * @param {string} accessToken 令牌
  * @returns {Promise}
  */
-function getUserData(accessToken) {
-  return new Promise((resolve, reject) => {
-    axios({
-      method: 'get',
-      url: 'https://api.github.com/user',
-      params: {
-        access_token: accessToken
-      }
-    }).then((result) => {
-      resolve(result.data)
-    }).catch((err) => {
-      reject(err)
-    })
+function getUserInfo(accessToken) {
+  return axios({
+    method: 'get',
+    url: 'https://api.github.com/user',
+    params: {
+      access_token: accessToken
+    }
+  }).then(result => {
+    result.data.accessToken = accessToken;
+    return result.data
   })
 }
