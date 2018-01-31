@@ -23,10 +23,10 @@ exports.auth = function (code) {
     }).then(user => {
         const userInfo = {
           id: user.id,
-          userName: user.login,
-          accessToken: user.accessToken,
+          name: user.login,
+          token: user.accessToken,
           email: user.email,
-          avatarUrl: user.avatar_url,
+          avatar: user.avatar_url,
           intro: user.bio
         }
         resolve(userInfo)
@@ -43,13 +43,14 @@ exports.auth = function (code) {
  * @param {String} githubAccessToken
  * @returns {Promise}
  */
-exports.registerByGithub = function (githubId, githubUserName, githubAccessToken, githubAvatarUrl, githubEmail, githubIntro) {
+exports.insertGitHub = function (githubId, githubUserName, githubAccessToken, githubAvatarUrl, githubEmail, githubIntro) {
   const sql = 'insert into users(pid, githubId, githubUserName, userName, nickName, githubAccessToken, avatarUrl, email, intro) values(?, ?, ?, ?, ?, ?, ?, ?, ?)'
-  const sqlParams = [uuidv4(), githubId, githubUserName, githubUserName, githubUserName, githubAccessToken, githubAvatarUrl, githubEmail, githubIntro]
+  const pid = uuidv4()
+  const sqlParams = [pid, githubId, githubUserName, githubUserName, githubUserName, githubAccessToken, githubAvatarUrl, githubEmail, githubIntro]
   return new Promise((resolve, reject) => {
-    conn.query(sql, sqlParams, (err, datas) => {
+    conn.query(sql, sqlParams, (err) => {
       if(err) return reject(err)
-      resolve(datas)
+      resolve(pid)
     })
   })
 }

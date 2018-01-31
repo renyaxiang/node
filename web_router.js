@@ -11,6 +11,11 @@ const setting = require('./controllers/setting')
 const adminPost = require('./controllers/admin/post')
 const adminUser = require('./controllers/admin/user')
 
+router.use((req, res, next) => {
+    res.locals.currentUser = req.session.currentUser || null
+    next()
+})
+
 router.get('/', index.index)
 
 // admin

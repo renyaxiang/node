@@ -42,11 +42,6 @@ app.use('/api/v1', apiRouter)
 app.use('/api/admin', apiAdminRouter)
 app.use('/', webRouter)
 
-app.use((req, res, next) => {
-    app.locals.currentUser = req.session.currentUser || null
-    next()
-})
-
 // const env = process.env.NODE_ENV ||  'dev'
 // if(env == 'dev'){   
 //     app.use(errorhandler())
