@@ -30,13 +30,18 @@ const utils = require('../common/utils');
  */
 exports.registerUser = function (username, password, email) {
     const sql = 'insert into users(pid, username, password, nickname, email) values(?, ?, ?, ?, ?)'
-    const sqlParams = [uuidv4(), username, utils.cryptoPassword(password), username, email]
+    const pid = uuidv4()
+    const sqlParams = [pid, username, utils.cryptoPassword(password), username, email]
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
             if (err) {
                 reject(err)
             } else {
-                resolve(datas)
+                const user = {
+                    pid,
+                    username
+                }
+                resolve(user)
             }
         })
     })
