@@ -1,7 +1,6 @@
 /**
  * @author xiangry <xiangrenya.gmail.com>
  */
-const EventProxy = require('eventproxy')
 const PostService = require('../services/post')
 const config = require('../config')
 const utils = require('../common/utils')
@@ -14,11 +13,11 @@ exports.showPostForm = function (req, res) {
 
 // 查询列表：分页、模糊查询
 exports.getPosts = function (req, res, next) {
-    const ep = new EventProxy()
     const userId = null
     const key = req.query.key || ''
     let page = 1
     let perPage = 20
+
     if (req.query.page) {
         page = Number(req.query.page)
     }
@@ -26,19 +25,19 @@ exports.getPosts = function (req, res, next) {
         perPage = Number(req.query.perPage)
     }
 
-    PostService.getPostList(userId, key, page, perPage).then(datas => {
-        ep.emit('posts', datas)
-    }).catch(err => {
-        next(err)
+    var postsPromise = new Promise((resolve, reject) => {
+        PostService.getPostList(userId, key, page, perPage).then(posts => {
+            resolve(posts)
+        })
     })
 
-    PostService.countPosts(userId, key).then(data => {
-        ep.emit('count', data)
-    }).catch(err => {
-        next(err)
+    var countPromise = new Promise((resolve, reject) => {
+        PostService.countPosts(userId, key).then(count => {
+            resolve(count)
+        })
     })
     
-    ep.all('posts', 'count',  function(posts, count){
+    Promise.all([postsPromise, countPromise]).then(([posts, count]) => {
         res.render('post', {
             title: '文章列表',
             posts: posts,
@@ -46,6 +45,8 @@ exports.getPosts = function (req, res, next) {
             pages: Math.ceil(count/10),
             key: key
         })
+    }).catch(err => {
+        next(err)
     })
 }
 
