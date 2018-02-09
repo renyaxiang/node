@@ -28,7 +28,7 @@ const utils = require('../common/utils');
  * @param {String} email 邮箱
  * @returns {Promise}
  */
-exports.registerUser = function (username, password, email) {
+exports.signup = function (username, password, email) {
     const sql = 'insert into users(pid, username, password, nickname, email) values(?, ?, ?, ?, ?)'
     const pid = uuidv4()
     const sqlParams = [pid, username, utils.cryptoPassword(password), username, email]
@@ -154,7 +154,7 @@ exports.validateUserName = function (username) {
  * @param {String} password 密码
  * @returns {Promise}
  */
-exports.userLogin = function (username, password) {
+exports.login = function (username, password) {
     const sql = 'select * from users where username = ? and password = ?'
     const sqlParams = [username, utils.cryptoPassword(password)]
     return new Promise((resolve, reject) => {

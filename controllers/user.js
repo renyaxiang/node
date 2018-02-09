@@ -25,7 +25,7 @@ exports.signup = function (req, res, next) {
         if (password != repassword) return errorHandler('两次密码不一致')
         UserService.validateUserName(username).then(isExist => {
             if (isExist) return errorHandler('用户名已存在')
-            return UserService.registerUser(username, password, email)
+            return UserService.signup(username, password, email)
         }).then(user => {
             req.session.currentUser = {
                 userId: user.pid,
@@ -57,7 +57,7 @@ exports.login = function (req, res, next) {
     const {username, password} = utils.normalizeObj(req.body)
 
     if (username && password) {
-        UserService.userLogin(username, password).then(data => {
+        UserService.login(username, password).then(data => {
             if(!data) return errorHandler('用户名或密码错误')
             req.session.currentUser = {
                 userId: data.pid,
@@ -82,6 +82,7 @@ exports.login = function (req, res, next) {
     }
 }
 
+// 安全退出
 exports.signout = function (req, res, next) {
     req.session.destroy()
     res.clearCookie('user', { path: '/' })
