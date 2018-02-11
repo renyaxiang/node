@@ -1,24 +1,21 @@
 <div class="container">
     <div class="clearfix">
-        <a href="/post/form" class="pull-right">
-            <button class="btn btn-primary">新增文章 <i class="fa fa-plus"></i></button>        
-        </a>    
+        <a href="/post/form" class="btn btn-primary pull-right">新增文章 <i class="fa fa-plus"></i></a>
     </div>
     <hr>
-    
     <% if(pages == 0){ %>
         <p class="text-muted">暂无相关文章</p>    
     <% } %>
     <ul class="post-list">
         <% posts.forEach(function(post){ %>
             <li>
-                <img src="" alt="">
+                <img src="<%= defautAvatar(post.avatar) %>">
                 <section>
                     <a href="/posts/<%= post.pid %>" class="text-overflow">
                         <%= post.title %>
                     </a>
                     <div class="post-meta">
-                        <span><%= post.username %></span> ·
+                        <span><%= post.nickname %></span> ·
                         <time><%= fromNow(post.updateDate) %></time>
                     </div>
                 </section>

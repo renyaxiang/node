@@ -1,16 +1,13 @@
 <div class="container">
-    <h3><%= post.title %></h3>
+    <h5><%= post.title %>
+        <a href="/posts/<%= post.pid%>/edit" class="btn btn-primary btn-sm pull-right">编辑 <i class="fa fa-edit"></i></a>
+    </h5>
     <div>
         <span><%= post.username %></span> ·
         <time><%= fromNow(post.updateDate) %></time>
     </div>
     <hr>
-    <p><%= post.content %></p>
-    <div class="clearfix">
-        <div class="pull-right">
-            <i class="fa fa-heart-o"></i>
-        </div>
-    </div>
+    <p><%- post.content %></p>
     <h5>用户评论</h5>
     <hr>
     <form>

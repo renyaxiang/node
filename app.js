@@ -14,7 +14,6 @@ const config = require('./config')
 const logger = require('./common/logger')
 const mysqlSession = require('./middlewares/session').mysqlSession
 const apiRouter = require('./api_router')
-const apiAdminRouter = require('./api_admin_router')
 const webRouter = require('./web_router')
 
 // 视图引擎
@@ -39,41 +38,28 @@ app.use(mysqlSession)
 
 // 路由管理
 app.use('/api/v1', apiRouter)
-app.use('/api/admin', apiAdminRouter)
 app.use('/', webRouter)
-
-// const env = process.env.NODE_ENV ||  'dev'
-// if(env == 'dev'){   
-//     app.use(errorhandler())
-// }else{
-//     app.use(function(err, req, res, next){
-//         logger.error(err)
-//         res.status(500).send(err.message)
-//     })
-// }
 
 // 异常处理
 app.use(function (err, req, res, next) {
-    if (['TokenExpiredError', 'JsonWebTokenError'].indexOf(err.name) != -1) {
-        if (req.xhr) {
+    // ajax请求
+    if(req.xhr){
+        // 特殊处理jwt验证失败问题        
+        if (['TokenExpiredError', 'JsonWebTokenError'].indexOf(err.name) != -1){
             res.status(401).send(err)
-        } else {
-            res.render('error', {
-                title: '无权限访问该页面',
-                msg: '无权限访问该页面'
-            })
+        }else{
+            res.status(500).send(err.message)
         }
-    } else {
-        if (req.xhr) {
-            res.status(500).send(err)
-        } else {
-            res.render('error', {
-                title: '服务器内部错误',
-                msg: err
-            })
-        }
+    }else{
+        res.render('error', {
+            title: '服务器内部错误',
+            msg: err
+        })
     }
-    logger.error(err)
+    // 产线将错误日志写入日志里
+    if (!config.debug) {
+        logger.error(err)
+    }
 })
 
 // 404页面

@@ -1,0 +1,10 @@
+<div class="container">
+    <h5><%= wiki.title %>
+        <a href="/wikis/<%= wiki.pid%>/edit" class="btn btn-primary btn-sm pull-right">编辑 <i class="fa fa-edit"></i></a>
+    </h5>
+    <div>
+        <time><%= fromNow(wiki.updateDate) %></time>
+    </div>
+    <hr>
+    <p><%- wiki.content %></p>
+</div>

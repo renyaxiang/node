@@ -1,6 +1,6 @@
 /**
  * @author xiangry <xiangrenya@gmail.com>
- * 工具类
+ * @description 工具类
     - 密码加密
     - 创建token
     - 验证token
@@ -43,11 +43,8 @@ exports.signToken = function (payload) {
 exports.validateToken = function (token, cb) {
     return new Promise((resolve,reject) => {
         jwt.verify(token, config.jwt_secret, (err, decoded) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(decoded.payload)
-            }
+            if(err) reject(err)
+            resolve(decoded.payload)
         })
     })
 }

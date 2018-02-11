@@ -20,6 +20,7 @@ exports.userRequired = function (req, res, next) {
     const token = req.headers.authorization || req.query.token
     utils.validateToken(token).then(payload => {
         req.payload = payload
+        next()
     }).catch(err => {
         next(err)
     })

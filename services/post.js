@@ -1,6 +1,6 @@
 /**
  * @author xiangry <xiangrenya@gmail.com>
- * 数据库服务列表
+ * @description 文章服务
     - 文章列表查询
     - 文章数目统计
     - 新增文章
@@ -20,8 +20,8 @@ const utils = require('../common/utils')
  * @param {String} title 标题
  * @returns {Promise}
  */
-exports.getPostList = function (userId, title, page, perPage) {
-    let sql = 'select  p.pid, u.username, u.avatarUrl, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where 1 = 1 '
+exports.getList = function (userId, title, page, perPage) {
+    let sql = 'select  p.pid, u.nickname, u.avatar, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where 1 = 1 '
     let sqlParams = []    
     if(userId){
         sql += 'and p.userId = ? '
@@ -33,17 +33,12 @@ exports.getPostList = function (userId, title, page, perPage) {
     }
     sql += 'order by p.updateDate desc limit ?, ?'
     sqlParams.push((page - 1) * perPage, perPage)
-
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(datas)
-            }
+            if(err) reject(err)
+            resolve(datas)
         })
     })
-    
 }
 
 /**
@@ -52,7 +47,7 @@ exports.getPostList = function (userId, title, page, perPage) {
  * @param {String} title 标题
  * @returns {Promise}
  */
-exports.countPosts = function (userId, title) {
+exports.count = function (userId, title) {
     let sql = 'select count(pid) as count from posts where 1 = 1 '
     let sqlParams = []    
     if(userId){
@@ -63,14 +58,10 @@ exports.countPosts = function (userId, title) {
         sql += 'and title like ? '
         sqlParams.push('%' + title + '%')
     }
-
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(datas[0].count)
-            }
+            if(err) reject(err)
+            resolve(datas[0].count)
         })
     })
 }
@@ -83,38 +74,30 @@ exports.countPosts = function (userId, title) {
  * @param {String} content 正文
  * @returns {Promise}
  */
-exports.addPost = function (userId, categoryId, title, content) {
+exports.add = function (userId, categoryId, title, content) {
     const sql = 'insert into posts(pid, userId, categoryId, title, content) values(?, ?, ?, ?, ?)'
     const pid = uuidv4()
     const sqlParams = [pid, userId, categoryId, title, content]
-
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(pid)
-            }
+            if(err) reject(err)
+            resolve(pid)
         })
     })
 }
 
 /**
  * 获取文章详情
- * @param {String} pid 文章id
+ * @param {String} id 文章id
  * @returns {Promise}
  */
-exports.getPostDetail = function (pid) {
-    const sql = 'select  u.username, u.avatarUrl, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where p.pid = ?'
-    const sqlParams = [pid]
-
+exports.getOne = function (id) {
+    const sql = 'select  u.username, u.avatar, p.pid, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where p.pid = ?'
+    const sqlParams = [id]
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(datas[0])
-            }
+            if(err) reject(err)
+            resolve(datas[0])
         })
     })
 }
@@ -130,34 +113,26 @@ exports.getPostDetail = function (pid) {
 exports.updatePost = function (pid, title, content, cateogryId) {
     const sql = 'update posts set title = ?, content = ?, cateogryId = ? where pid = ?'
     const sqlParams = [title, content, cateogryId, pid]
-
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(datas)
-            }
+            if(err) reject(err)
+            resolve(datas)
         })
     })
 }
 
 /**
  * 删除某篇文章
- * @param {String} pid 文章id
+ * @param {String} id 文章id
  * @returns {Promise}
  */
-exports.deletePost = function (pid) {
+exports.deletePost = function (id) {
     const sql = 'delete from posts where pid = ?'
     const sqlParams = [id]
-
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
-            if(err){
-                reject(err)
-            }else{
-                resolve(datas)
-            }
+        conn.query(sql, sqlParams, err => {
+            if(err) reject(err)
+            resolve()
         })
     })
 }

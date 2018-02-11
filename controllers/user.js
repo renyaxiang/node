@@ -1,10 +1,15 @@
 /**
  * @author xiangry <xiangrenya@gmail.com>
+ * @description 用户控制器
+ * - 显示登录页
+ * - 显示注册页
+ * - 注册
+ * - 登录
+ * - 安全退出
  */
 
 const utils = require('../common/utils')
 const UserService = require('../services/user')
-
 
 exports.showLogin = function (req, res) {
     res.render('login', {
@@ -23,7 +28,7 @@ exports.signup = function (req, res, next) {
 
     if (username && password && email) {
         if (password != repassword) return errorHandler('两次密码不一致')
-        UserService.validateUserName(username).then(isExist => {
+        UserService.isValidUserName(username).then(isExist => {
             if (isExist) return errorHandler('用户名已存在')
             return UserService.signup(username, password, email)
         }).then(user => {

@@ -9,54 +9,42 @@
 
 const utils = require('../common/utils')
 const PostService = require('../services/post')
-const EventProxy = require('eventproxy')
 
 // 获取文章列表
-exports.getPostList = function (req, res, next) {
-    const ep = new EventProxy()
+exports.getList = function (req, res, next) {
+    const userId = req.payload.status === 2 ? '' : req.payload.userId
+    let {title = '', page = 1, perPage = 20} = req.query
+    page = parseInt(page)
+    perPage = parseInt(perPage)
 
-    const userId = req.payload.userId
-    const title = req.body && req.body.title || ''
-
-    let page = 1
-    let perPage = 20
-    if (req.query.page) {
-        page = Number(req.query.page)
-    }
-    if (req.query.perPage) {
-        perPage = Number(req.query.perPage)
-    }
-
-    PostService.getPostList(userId, title, page, perPage).then(datas => {
-        ep.emit('posts', datas)
-    }).catch(err => {
-        next(err)
+    const postsPromise = new Promise((resolve, reject) => {
+        PostService.getList(userId, title, page, perPage).then(datas => {
+            resolve(datas)
+        })    
     })
 
-    PostService.getPostCount(userId, title).then(data => {
-        ep.emit('count', data)
-    }).catch(err => {
-        next(err)
+    const countPromise = new Promise((resolve, reject) => {
+        PostService.count(userId, title).then(data => {
+            resolve(data)
+        })
     })
 
-    ep.all('posts', 'count', function (posts, count) {
+    Promise.all([postsPromise, countPromise]).then(([posts, count]) => {
         res.send({
             posts: posts,
             currentPage: page,
-            totalCount: count
+            total: count
         })
+    }).catch(err => {
+        next(err)
     })
 }
 
 // 新增文章
-exports.addPost = function (req, res, next) {
+exports.add = function (req, res, next) {
     const userId = req.payload.userId
-    const body = utils.normalizeObj(req.body)
-    const title = body.title
-    const content = body.content
-    const categoryId = body.categoryId
-
-    PostService.addPost(userId, categoryId, title, content).then(() => {
+    const {title, content, categoryId} = utils.normalizeObj(req.body)
+    PostService.add(userId, categoryId, title, content).then(() => {
         res.send({
             success: true,
             message: '新增文章成功'
@@ -67,10 +55,9 @@ exports.addPost = function (req, res, next) {
 }
 
 // 文章详情
-exports.getPostDetail = function (req, res, next) {
-    const pid = req.params.id
-
-    PostService.getPostDetail(pid).then((data) => {
+exports.getOne = function (req, res, next) {
+    const id = req.params.id
+    PostService.getOne(id).then((data) => {
         res.send({
             post: data
         })
@@ -80,14 +67,10 @@ exports.getPostDetail = function (req, res, next) {
 }
 
 // 修改文章
-exports.updatePost = function (req, res, next) {
-    const pid = req.params.id
-    const body = utils.normalizeObj(req.body)
-    const title = body.title
-    const content = body.content
-    const categoryId = body.categoryId
-
-    PostService.updatePost(pid, title, content, categoryId).then(()=> {
+exports.update = function (req, res, next) {
+    const id = req.params.id
+    const {title, content, categoryId} = utils.normalizeObj(req.body)
+    PostService.update(id, title, content, categoryId).then(()=> {
         res.send({
             success: true,
             message: '修改文章成功'
@@ -98,10 +81,9 @@ exports.updatePost = function (req, res, next) {
 }
 
 // 删除文章
-exports.deletePost = function (req, res, next) {
-    const pid = req.params.id
-
-    PostService.deletePost(pid).then(() => {
+exports.delete = function (req, res, next) {
+    const id = req.params.id
+    PostService.delete(id).then(() => {
         res.send({
             successed: true,
             message: '删除文章成功'
