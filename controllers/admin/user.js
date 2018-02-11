@@ -7,7 +7,6 @@ const config = require('../../config')
 
 // 查询列表：分页、模糊查询
 exports.getList = function (req, res, next) {
-    const ep = new EventProxy()
     let { username = '', page = 1, perPage = 20 } = req.query
     page = parseInt(page)
     perPage = parseInt(perPage)
