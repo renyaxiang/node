@@ -21,13 +21,13 @@ exports.getPostList = function (req, res, next) {
         perPage = Number(req.query.perPage)
     }
 
-    PostService.getPostList(userId, key, page, perPage).then(datas => {
+    PostService.getList(userId, key, page, perPage).then(datas => {
         ep.emit('posts', datas)
     }).catch(err => {
         next(err)
     })
 
-    PostService.countPosts(userId, key).then(data => {
+    PostService.count(userId, key).then(data => {
         ep.emit('count', data)
     }).catch(err => {
         next(err)
@@ -42,19 +42,5 @@ exports.getPostList = function (req, res, next) {
             pages: Math.ceil(count/10),
             key: key
         })
-    })
-}
-
-// 查看文章详情
-exports.getPostDetail = function (req, res, next) {
-    const pid = req.params.id
-
-    PostService.getPostDetail(pid).then(data => {
-        res.render('post_detail', {
-            title: data.title,
-            post: data
-        })
-    }).catch(err => {
-        next(err)
     })
 }

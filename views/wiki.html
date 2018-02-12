@@ -14,23 +14,23 @@
         </div>
         <div class="panel-body">
             <ul>
-                <li>查询用户列表: POST api/v1/users?page&perPage
+                <li>查询用户列表: GET api/v1/users
                     <label class="label label-warning">管理员</label>
                     <span class="pull-right">项仁亚 / 2018-02-10 12:12</span>
                 </li>
-                <li>修改用户状态: PUT api/v1/users/:userId/:status
+                <li>修改用户状态: PUT api/v1/users/:id/status
                     <label class="label label-warning">管理员</label>
                     <span class="pull-right">项仁亚 / 2018-02-10 12:12</span>
                 </li>
-                <li>注销用户: DELETE api/v1/users/:userId
+                <li>注销用户: DELETE api/v1/users/:id
                     <label class="label label-warning">管理员</label>
                     <span class="pull-right">项仁亚 / 2018-02-10 12:12</span>
                 </li>
                 <li>注册: POST api/v1/signup</li>
                 <li>登录: POST api/v1/login</li>
-                <li>重置密码: PUT api/v1/users/:userId/resetPassword</li>
-                <li>获取用户信息: GET api/v1/users/:userId</li>
-                <li>修改用户信息: PUT api/v1/users/:userId</li>
+                <li>重置密码: PUT api/v1/users/:id/password</li>
+                <li>获取用户信息: GET api/v1/users/:id</li>
+                <li>修改用户信息: PUT api/v1/users/:id</li>
                 <li>授权Github: GET api/v1/github/auth/:code</li>
                 <li>获取令牌: GET api/v1/github/token/:githubId</li>
             </ul>
@@ -46,13 +46,11 @@
         </div>
         <div class="panel-body">
             <ul>
-                <li>查询文章列表: POST api/v1/posts?page&perPage</li>
-                <li>新增文章: POST api/v1/post</li>
-                <li>修改文章: PUT api/v1/posts/:postId</li>
-                <li>删除文章: DELETE api/v1/posts/:postId</li>
+                <li>查询文章列表: GET api/v1/posts</li>
+                <li>新增文章: POST api/v1/posts</li>
+                <li>修改文章: PUT api/v1/posts/:id</li>
+                <li>删除文章: DELETE api/v1/posts/:id</li>
             </ul>
-
-
         </div>
     </div>
 
