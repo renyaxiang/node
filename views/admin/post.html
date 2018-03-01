@@ -1,4 +1,11 @@
 <div class="container">
+    <div class="clearfix">
+        <form action="/posts" method="GET" class="form-inline pull-right">
+            <input type="text" class="form-control" placeholder="文章标题">
+            <button class="btn btn-primary">查询</button>
+        </form>
+    </div>
+    <br>
     <% if(pages == 0){ %>
         <p class="text-muted">暂无相关文章</p>    
     <% } %>
