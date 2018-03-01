@@ -8,7 +8,7 @@ const utils = require('../../common/utils')
 
 
 // 查询列表：分页、模糊查询
-exports.getPostList = function (req, res, next) {
+exports.getList = function (req, res, next) {
     const ep = new EventProxy()
     const userId = null
     const key = req.query.key || ''

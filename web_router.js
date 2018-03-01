@@ -21,7 +21,7 @@ router.get('/', index.index)
 
 // admin
 router.get('/admin/users', auth.adminRequired, adminUser.getList)
-router.get('/admin/posts', auth.adminRequired, adminPost.getPostList)
+router.get('/admin/posts', auth.adminRequired, adminPost.getList)
 
 // user
 router.get('/signup', user.showSignup)

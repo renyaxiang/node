@@ -15,7 +15,7 @@ exports.showPostForm = function (req, res) {
 exports.getList = function (req, res, next) {
     const currentUser = req.session.currentUser
     const userId = currentUser.isAdmin ? null : currentUser.userId
-    let { key = '', page = 1, perPage = 20 } = req.query
+    let { key = '', page = 1, perPage = 10 } = req.query
 
     page = parseInt(page)
     perPage = parseInt(perPage)
@@ -37,7 +37,7 @@ exports.getList = function (req, res, next) {
             title: '文章列表',
             posts: posts,
             currentPage: page,
-            pages: Math.ceil(count / 10),
+            pages: Math.ceil(count / perPage),
             key: key
         })
     }).catch(err => {
