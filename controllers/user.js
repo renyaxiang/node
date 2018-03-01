@@ -13,7 +13,9 @@ const UserService = require('../services/user')
 
 exports.showLogin = function (req, res) {
     res.render('login', {
-        title: '登录'
+        title: '登录',
+        username: 'admin',
+        password: 'amdin.123'
     })
 }
 exports.showSignup = function (req, res) {
