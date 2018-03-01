@@ -1,10 +1,9 @@
 <div class="container">
-    <h5><%= post.title %>
-        <a href="/posts/<%= post.pid%>/edit" class="btn btn-primary pull-right">编辑 <i class="fa fa-edit"></i></a>
-    </h5>
+    <h5><%= post.title %></h5>
     <div>
         <span><%= post.nickname %></span> ·
         <time><%= fromNow(post.updateDate) %></time>
+        <a href="/posts/<%= post.pid%>/edit" class="btn btn-primary pull-right">编辑 <i class="fa fa-edit"></i></a>
     </div>
     <hr>
     <p><%- post.content %></p>

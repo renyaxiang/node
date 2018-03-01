@@ -21,3 +21,6 @@
     flex-direction: column;
     justify-content: center;
 }
+img{
+    max-width: 100%;
+}
