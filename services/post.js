@@ -92,7 +92,7 @@ exports.add = function (userId, categoryId, title, content) {
  * @returns {Promise}
  */
 exports.getOne = function (id) {
-    const sql = 'select  u.username, u.avatar, p.pid, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where p.pid = ?'
+    const sql = 'select  u.nickname, u.avatar, p.pid, p.title, p.content, p.updateDate from posts p left join users u on p.userId = u.pid where p.pid = ?'
     const sqlParams = [id]
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, datas) => {

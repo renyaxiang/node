@@ -1,17 +1,19 @@
 <div class="container">
     <h5><%= post.title %>
-        <a href="/posts/<%= post.pid%>/edit" class="btn btn-primary btn-sm pull-right">编辑 <i class="fa fa-edit"></i></a>
+        <a href="/posts/<%= post.pid%>/edit" class="btn btn-primary pull-right">编辑 <i class="fa fa-edit"></i></a>
     </h5>
     <div>
-        <span><%= post.username %></span> ·
+        <span><%= post.nickname %></span> ·
         <time><%= fromNow(post.updateDate) %></time>
     </div>
     <hr>
     <p><%- post.content %></p>
+    <br>
     <h5>用户评论</h5>
     <hr>
     <form>
         <textarea class="form-control" rows="3" placeholder="请输入您的评论"></textarea>
+        <br>
         <div class="clearfix">
             <button class="btn btn-primary pull-right">评论</button>
         </div>

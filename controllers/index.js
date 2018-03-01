@@ -10,7 +10,7 @@ exports.index = function (req, res, next) {
   if(!code) {
     return res.render('index', {
       title: '首页',
-      words: 'Hello World'
+      words: '知识改变命运'
     })
   }
   GithubService.auth(code).then(g => {
