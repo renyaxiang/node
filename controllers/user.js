@@ -15,7 +15,7 @@ exports.showLogin = function (req, res) {
     res.render('login', {
         title: '登录',
         username: 'admin',
-        password: 'amdin.123'
+        password: 'admin.123'
     })
 }
 exports.showSignup = function (req, res) {
