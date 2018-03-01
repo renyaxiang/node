@@ -13,7 +13,7 @@ exports.getList = function (req, res, next) {
     const userId = null
     const key = req.query.key || ''
     let page = 1
-    let perPage = 20
+    let perPage = 10
     if (req.query.page) {
         page = Number(req.query.page)
     }
@@ -39,7 +39,7 @@ exports.getList = function (req, res, next) {
             posts: posts,
             currentPage: page,
             perPage: perPage,
-            pages: Math.ceil(count/10),
+            pages: Math.ceil(count/perPage),
             key: key
         })
     })
