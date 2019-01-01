@@ -25,7 +25,8 @@ express + mysqljs + ejs-mate + log4js + axios + bootstrap
 
 - [x] POST api/v1/signup 注册
 - [x] POST api/v1/login 登录
-- [x] GET api/v1/usrs/:id 用户详情
+- [x] GET api/v1/users 用户列表
+- [x] GET api/v1/users/:id 用户详情
 - [x] PUT api/v1/users/:id 修改用户信息
 - [x] PUT api/v1/users/:id/password 重置密码
 - [x] DELETE api/v1/users/:id 注销用户
