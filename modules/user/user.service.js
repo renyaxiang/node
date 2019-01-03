@@ -5,9 +5,8 @@ const utils = require('../../common/utils');
 exports.signup = function(username, password, email) {
     const sql =
         'insert into users(pid, username, password, nickname, email) values(?, ?, ?, ?, ?)';
-    const pid = uuidv4();
     const sqlParams = [
-        pid,
+        uuidv4(),
         username,
         utils.cryptoPassword(password),
         username,
@@ -29,9 +28,9 @@ exports.login = function(username, password) {
     const sql = 'select * from users where username = ? and password = ?';
     const sqlParams = [username, utils.cryptoPassword(password)];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas[0]);
+            resolve(data[0]);
         });
     });
 };
@@ -77,7 +76,7 @@ exports.count = function(username) {
 
 exports.get = function(id) {
     const sql =
-        'select  username, nickname, githubUserName, mobile, email, intro, avatar, status from users where pid = ?';
+        'select  username, nickname, mobile, email, intro, avatar, status from users where pid = ?';
     const sqlParams = [id];
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, data) => {
@@ -89,17 +88,17 @@ exports.get = function(id) {
 
 exports.update = function(id, nickname, mobile, email, intro, avatar) {
     let sql = 'update users set %s where pid = ?';
-    const fileds = [];
+    const fields = [];
     const sqlParams = [][(nickname, mobile, email, intro, avatar)].forEach(
         field => {
             if (field) {
-                fileds.push(`${field} = ?`);
+                fields.push(`${field} = ?`);
                 sqlParams.push(field);
             }
         }
     );
     sqlParams.push(id);
-    sql = sql.replace('%s', fileds.join(', '));
+    sql = sql.replace('%s', fields.join(', '));
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);

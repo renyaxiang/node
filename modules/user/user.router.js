@@ -25,7 +25,7 @@ apiRouter.put('/users/:id/status', apiAuth.adminRequired, UserApi.changeStatus);
 // 注销用户
 apiRouter.delete('/users/:id', apiAuth.adminRequired, UserApi.delete);
 
-// 主页页
+// 注册页
 webRouter.get('/signup', UserController.signupPage);
 // 登录页
 webRouter.get('/login', UserController.loginPage);
