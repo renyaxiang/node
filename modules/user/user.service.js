@@ -45,18 +45,17 @@ exports.list = function(page = 1, perPage = 10, username = '') {
     }
     let sql =
         'select pid, username, nickname, mobile, email, intro, avatar, status from users where 1 = 1 ';
-    let sqlParams = [(page - 1) * perPage, perPage];
-
+    let sqlParams = [];
     if (username) {
         sql += 'and username like ? ';
-        sqlParams.unshift('%' + username + '%');
+        sqlParams.push('%' + username + '%');
     }
     sql += 'order by createDate desc limit ?, ?';
-
+    sqlParams.push((page - 1) * perPage, perPage);
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas);
+            resolve(data);
         });
     });
 };
@@ -69,9 +68,9 @@ exports.count = function(username) {
         sqlParams.push('%' + username + '%');
     }
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas[0].count);
+            resolve(data[0].count);
         });
     });
 };
@@ -81,9 +80,9 @@ exports.get = function(id) {
         'select  username, nickname, githubUserName, mobile, email, intro, avatar, status from users where pid = ?';
     const sqlParams = [id];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas[0]);
+            resolve(data[0]);
         });
     });
 };
@@ -102,9 +101,9 @@ exports.update = function(id, nickname, mobile, email, intro, avatar) {
     sqlParams.push(id);
     sql = sql.replace('%s', fileds.join(', '));
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas);
+            resolve(data);
         });
     });
 };
@@ -113,7 +112,7 @@ exports.delete = function(id) {
     const sql = 'delete from users where pid = ?';
     const sqlParams = [id];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
             resolve();
         });
@@ -124,9 +123,9 @@ exports.changePassword = function(id, newPassword) {
     const sql = 'update users set password = ? where pid = ?';
     const sqlParams = [utils.cryptoPassword(newPassword), id];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas);
+            resolve(data);
         });
     });
 };
@@ -135,9 +134,9 @@ exports.changeStatus = function(id, status) {
     const sql = 'update users set status = ? where pid = ?';
     const sqlParams = [status, id];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas);
+            resolve(data);
         });
     });
 };
@@ -146,9 +145,9 @@ exports.isValidPassword = function(id, password) {
     const sql = 'select * from users where pid = ? and password = ?';
     const sqlParams = [id, utils.cryptoPassword(password)];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas.length == 1);
+            resolve(data.length == 1);
         });
     });
 };
@@ -157,9 +156,9 @@ exports.isValidUserName = function(username) {
     const sql = 'select * from users where username = ?';
     const sqlParams = [username];
     return new Promise((resolve, reject) => {
-        conn.query(sql, sqlParams, (err, datas) => {
+        conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(datas.length > 0);
+            resolve(data.length > 0);
         });
     });
 };

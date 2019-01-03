@@ -28,5 +28,6 @@ module.exports = {
     ignoreTLS: true
   },
   github_client_id: "",
-  github_client_secret: ""
+  github_client_secret: "",
+  scope: ['user', 'repo', 'gist']
 };
