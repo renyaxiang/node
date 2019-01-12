@@ -13,7 +13,7 @@ apiRouter.get('/posts/:id', PostApi.get);
 // 修改文章
 apiRouter.put('/posts/:id', apiAuth.userRequired, PostApi.update);
 // 文章列表
-apiRouter.get('/posts', PostApi.list);
+apiRouter.get('/posts', apiAuth.userRequired, PostApi.list);
 // 删除文章
 apiRouter.delete('/posts/:id', apiAuth.userRequired, PostApi.delete);
 

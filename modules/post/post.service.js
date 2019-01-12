@@ -89,7 +89,7 @@ exports.add = ({ userId, categoryId, title, content, poster, tagIds }) => {
 
 exports.get = id => {
     const sql =
-        'select  u.nickname, u.avatar_url, p.id, p.title, p.content, p.create_time, p.update_time, p.view_count from post p left join user u on p.user_id = u.id where p.id = ?';
+        'select  u.nickname, u.avatar_url, p.id, p.title, p.content, p.category_id, p.create_time, p.update_time, p.view_count from post p left join user u on p.user_id = u.id where p.id = ?';
     return new Promise((resolve, reject) => {
         conn.query(sql, id, (err, data) => {
             if (err) reject(err);

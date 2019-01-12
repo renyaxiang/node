@@ -2,7 +2,7 @@ const PostService = require('./post.service');
 
 exports.list = async (req, res, next) => {
     const { userId } = req.payload;
-    let { title, page, perPage } = req.query;
+    let { title, page = 1, perPage = 10 } = req.query;
     try {
         const data = await PostService.list({ userId, title, page, perPage });
         const total = await PostService.count({ userId, title });
