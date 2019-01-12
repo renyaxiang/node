@@ -1,4 +1,4 @@
-const conn = require('../common/mysql');
+const conn = require('../../common/mysql');
 const uuidv4 = require('uuid/v4');
 
 function addTagsToPost(tagIds, postId) {
@@ -33,7 +33,7 @@ exports.list = ({ userId = '', title = '', page = 1, perPage = 15 }) => {
         perPage = parseInt(perPage);
     }
     let sql =
-        'select  p.id, u.nickname, u.avatar_url, p.title, p.content, c.name, p.creat_time, p.update_time, p.view_count from post p left join category c on p.category_id = c.id left join users u on p.user_id = u.id where 1 = 1 ';
+        'select  p.id, u.nickname, u.avatar_url, p.title, p.content, c.name, p.create_time, p.update_time, p.view_count from post p left join category c on p.category_id = c.id left join user u on p.user_id = u.id where 1 = 1 ';
     let sqlParams = [];
     if (userId) {
         sql += 'and p.user_id = ? ';
@@ -89,7 +89,7 @@ exports.add = ({ userId, categoryId, title, content, poster, tagIds }) => {
 
 exports.get = id => {
     const sql =
-        'select  u.nickname, u.avatar_url, p.id, p.title, p.content, p.create_time, p.update_time, p.view_count from post p left join users u on p.user_id = u.id where p.id = ?';
+        'select  u.nickname, u.avatar_url, p.id, p.title, p.content, p.create_time, p.update_time, p.view_count from post p left join user u on p.user_id = u.id where p.id = ?';
     return new Promise((resolve, reject) => {
         conn.query(sql, id, (err, data) => {
             if (err) reject(err);

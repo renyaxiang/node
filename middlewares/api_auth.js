@@ -5,8 +5,8 @@
 const utils = require('../common/utils')
 
 exports.adminRequired = function (req, res, next) {
-    // 管理员：status == 2 
-    if (req.payload && req.payload.status === 2) {
+    // 管理员：role == 2 
+    if (req.payload && req.payload.role === 2) {
         next()
     } else {
         return res.status(403).send({

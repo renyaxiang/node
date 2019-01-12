@@ -1,15 +1,13 @@
 const express = require('express');
-const apiAuth = require('./middlewares/api_auth');
-const viewAuth = require('./middlewares/view_auth');
+const apiAuth = require('../../middlewares/api_auth');
+const viewAuth = require('../../middlewares/view_auth');
 const PostApi = require('./post.api');
 const PostController = require('./post.controller');
 const apiRouter = express.Router();
 const webRouter = express.Router();
 
-// 用户权限
-apiRouter.use(apiAuth.userRequired);
 // 新增文章
-apiRouter.post('/posts', PostApi.add);
+apiRouter.post('/posts', apiAuth.userRequired, PostApi.add);
 // 文章详情
 apiRouter.get('/posts/:id', PostApi.get);
 // 修改文章
@@ -24,7 +22,7 @@ webRouter.get('/posts', PostController.postListPage);
 // 文章详情页
 webRouter.get('/posts/:id', PostController.postDetailPage);
 // 新增文章页
-webRouter.get('/posts/add', viewAuth.userRequired, UserController.addPostPage);
+webRouter.get('/posts/add', viewAuth.userRequired, PostController.addPostPage);
 
 module.exports = {
     apiRouter,

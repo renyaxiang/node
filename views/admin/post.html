@@ -24,7 +24,7 @@
             <tr>
                 <td><%= index + 1 + (currentPage - 1) * perPage  %></td>
                 <td>
-                    <a href="/posts/<%= post.pid %>"><%= post.title %></a>
+                    <a href="/posts/<%= post.id %>"><%= post.title %></a>
                 </td>
                 <td><%= post.nickname %></td>
                 <td><%= dateFormat(post.updateDate) %></td>
