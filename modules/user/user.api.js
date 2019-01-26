@@ -2,7 +2,7 @@ const UserService = require('./user.service');
 const utils = require('../../common/utils');
 
 exports.signup = async (req, res, next) => {
-    const { username, password, email } = utils.normalizeObj(req.body);
+    const { username, password, email } = req.body;
     if (!username || !password || !email) {
         return res.status(500).send({
             result: false,
@@ -10,14 +10,26 @@ exports.signup = async (req, res, next) => {
         });
     }
     try {
-        if (await UserService.isValidUserName(username)) {
+        const hasUserName = await UserService.isValidUserName(username);
+        if (hasUserName) {
             return res.status(400).send({
                 result: false,
                 message: '用户名已存在'
             });
         }
-        UserService.signup(username, password, email).then(user => {
-            res.status(201).send(user);
+        const userId = await UserService.signup(username, password, email);
+        res.send({
+            result: true,
+            data: {
+                username,
+                nickname: username,
+                email,
+                role: 1,
+                token: utils.signToken({
+                    userId,
+                    role: 1
+                })
+            }
         });
     } catch (err) {
         next(err);
@@ -25,7 +37,7 @@ exports.signup = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-    const { username, password } = utils.normalizeObj(req.body);
+    const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send({
             result: false,
@@ -34,17 +46,25 @@ exports.login = async (req, res, next) => {
     }
     try {
         const data = await UserService.login(username, password);
-        const token = utils.signToken({
-            userId: data.pid,
-            status: data.status
-        });
-        const { password, ...rest } = data;
+        if (data) {
+            delete data.password;
+            return res.send({
+                result: true,
+                data: {
+                    ...data,
+                    token: utils.signToken({
+                        userId: data.id,
+                        role: data.role
+                    })
+                }
+            });
+        }
         res.send({
-            ...rest,
-            token
+            result: false,
+            message: '用户名或密码错误'
         });
     } catch (err) {
-        return next(err);
+        next(err);
     }
 };
 
@@ -60,18 +80,18 @@ exports.get = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
     const id = req.params.id;
-    const { nickname, mobile, email, intro, avatar } = utils.normalizeObj(
-        req.body
-    );
     try {
-        await UserService.update(id, nickname, mobile, email, intro, avatar);
+        await UserService.update({
+            id,
+            ...req.body
+        });
+        res.send({
+            result: true,
+            message: '更新用户信息成功'
+        });
     } catch (err) {
         next(err);
     }
-    res.send({
-        result: true,
-        message: '更新用户信息成功'
-    });
 };
 
 exports.changePassword = async (req, res, next) => {
@@ -96,7 +116,7 @@ exports.changePassword = async (req, res, next) => {
 };
 
 exports.list = async (req, res, next) => {
-    const { username, page, perPage } = req.query;
+    const { username, page = 1, perPage = 10 } = req.query;
     try {
         const users = await UserService.list(page, perPage, username);
         const count = await UserService.count(username);
@@ -120,7 +140,7 @@ exports.delete = async (req, res, next) => {
         next(err);
     }
     res.send({
-        success: true,
+        result: true,
         message: '注销用户成功'
     });
 };

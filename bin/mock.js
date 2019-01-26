@@ -7,7 +7,7 @@ const users = Mock.mock({
     'list|1-10': [{
         'username': '@first',
         'email': '@email(qq.com)',
-        'password': '@string(7, 10)',
+        'password': 'xiang.123',
         'avatar-url': '@image("100x100", "#ffffff", "#666666", "")'
     }]
 });

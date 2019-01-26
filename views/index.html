@@ -11,9 +11,12 @@
 </div>
 
 <script>
-    $(function(){
-        setTimeout(function(){
-            window.location.href = '/posts'
-        }, 3000)
-    })
+    const code =window.location.search.slice(1).split('=')[1];
+    // fetch('http://localhost:3000/api/v1/github/info/' + code).then(res => res.json()).then(data => console.log(data));
+    fetch('http://localhost:3000/api/v1/github/oauth/' + code).then(res => res.json()).then(data => console.log(data));
+    // $(function(){
+    //     setTimeout(function(){
+    //         window.location.href = '/posts'
+    //     }, 3000)
+    // })
 </script>

@@ -1,16 +1,24 @@
 const GithubService = require('./github.service');
-const utils = require('../common/utils');
+const utils = require('../../common/utils');
 
 exports.login = (req, res, next) => {
     const url = GithubService.getAuthorizationUrl();
-    res.send(url);
+    res.send({
+        result: true,
+        data: {
+            url
+        }
+    });
 };
 
-exports.info = (req, res, next) => {
+exports.info = async (req, res, next) => {
     const code = req.params.code;
     try {
-        const githubInfo = GithubService.getGithubInfoByCode(code);
-        res.send(githubInfo);
+        const { data } = await GithubService.getGithubInfoByCode(code);
+        res.send({
+            result: true,
+            data
+        });
     } catch (err) {
         next(err);
     }
@@ -19,33 +27,35 @@ exports.info = (req, res, next) => {
 exports.oauth = async (req, res, next) => {
     const code = req.params.code;
     try {
-        const {
-            login,
-            avatar_url,
-            email,
-            bio
-        } = GithubService.getGithubInfoByCode(code);
-        const user = {
-            nickname: login,
+        const { data } = await GithubService.getGithubInfoByCode(code);
+        const { name, avatar_url, email, bio } = data;
+        const syncUser = {
+            nickname: name,
             avatar: avatar_url,
             email,
             intro: bio
         };
-        const user = await GithubService.getUser(user.nickname);
+        const user = await GithubService.getUser(name);
         let userId;
         if (user) {
-            userId = user.pid;
-            await GithubService.update(user);
+            userId = user.id;
+            await GithubService.updateUser(syncUser);
         } else {
-            userId = await GithubService.addUser(user);
+            userId = await GithubService.addUser(syncUser);
         }
+
         const token = utils.signToken({
             userId,
-            status: data.status
+            role: 0
         });
         res.send({
-            ...user,
-            token
+            result: true,
+            data: {
+                userId,
+                role: 0,
+                ...syncUser,
+                token
+            }
         });
     } catch (err) {
         next(err);

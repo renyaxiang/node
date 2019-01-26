@@ -1,5 +1,5 @@
 exports.adminRequired = function(req, res, next) {
-    if (req.session.currentUser.isAdmin) {
+    if (req.session.user.isAdmin) {
         next();
     } else {
         res.render('error', {
@@ -10,7 +10,7 @@ exports.adminRequired = function(req, res, next) {
 };
 
 exports.userRequired = function(req, res, next) {
-    if (req.session && req.session.currentUser) {
+    if (req.session && req.session.user) {
         next();
     } else {
         res.redirect('/login?redirectUrl=' + req.originalUrl);

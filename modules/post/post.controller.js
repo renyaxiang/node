@@ -1,4 +1,4 @@
-const PostService = require('../services/post');
+const PostService = require('./post.service');
 
 exports.addPostPage = function(req, res) {
     res.render('post/add', {
@@ -7,7 +7,7 @@ exports.addPostPage = function(req, res) {
 };
 
 exports.postListPage = async (req, res, next) => {
-    const { userId } = req.session.currentUser;
+    const { userId } = req.session.user;
     let { title, page, perPage } = req.query;
     try {
         const data = await PostService.list({ userId, title, page, perPage });

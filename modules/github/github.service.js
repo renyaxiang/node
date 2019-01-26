@@ -6,12 +6,12 @@
 const qs = require('querystring');
 const axios = require('axios');
 const uuidv4 = require('uuid/v4');
-const config = require('../config');
-const conn = require('../common/mysql');
+const config = require('../../config');
+const conn = require('../../common/mysql');
 
 exports.getAuthorizationUrl = () => {
     const query = {
-        client_id: config.client_id,
+        client_id: config.github_client_id,
         scope: config.scope.join(' ')
     };
     qs.stringify(query);
@@ -19,7 +19,7 @@ exports.getAuthorizationUrl = () => {
 };
 
 exports.getGithubInfoByCode = async code => {
-    const { access_token } = await axios({
+    const { data } = await axios({
         method: 'get',
         url: 'https://github.com/login/oauth/access_token',
         params: {
@@ -28,42 +28,45 @@ exports.getGithubInfoByCode = async code => {
             code: code
         }
     });
+    // 返回的 data："access_token=48e8957594ac41cd4809fea4143f66574aaa6a6a&scope=gist%2Crepo%2Cuser&token_type=bearer"
+    const token = qs.parse(data).access_token;
     const githubInfo = await axios({
         method: 'get',
         url: 'https://api.github.com/user',
         params: {
-            access_token
+            access_token: token
         }
     });
     return githubInfo;
 };
 
 exports.getUser = nickname => {
-    const sql = 'select * from users where nickname = ?';
+    const sql = 'select id from user where nickname = ?';
     const sqlParams = [nickname];
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, (err, data) => {
             if (err) reject(err);
-            resolve(data[0] && data[0].pid);
+            resolve(data[0]);
         });
     });
 };
 
 exports.addUser = ({ nickname, avatar, email, intro }) => {
     const sql =
-        "insert into users(pid, nickname, avatar, email, intro, role) values(?, ?, ?, ?, ?, 'github')";
-    const sqlParams = [uuidv4(), nickname, avatar, email, intro];
+        'insert into user(id, nickname, avatar_url, email, intro, role) values(?, ?, ?, ?, ?, 0)';
+    const id = uuidv4();
+    const sqlParams = [id, nickname, avatar, email, intro];
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, err => {
             if (err) return reject(err);
-            resolve(pid);
+            resolve(id);
         });
     });
 };
 
 exports.updateUser = ({ nickname, avatar, email, intro }) => {
     const sql =
-        "update users set avatar = ?, email = ?, intro = ? where role = 'github' and nickname = ?";
+        "update user set avatar_url = ?, email = ?, intro = ? where role = 0 and nickname = ?";
     const sqlParams = [avatar, email, intro, nickname];
     return new Promise((resolve, reject) => {
         conn.query(sql, sqlParams, err => {
